@@ -1,3 +1,5 @@
+using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
+using JavaScriptEngineSwitcher.Jint;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Rewrite;
@@ -38,9 +40,12 @@ namespace VsixGallery
 			});
 
 			services.AddOutputCaching();
-			services.AddWebOptimizer(pipeline =>
-				pipeline.CompileScssFiles()
-			);
+			services.AddJsEngineSwitcher(options =>
+			{
+				options.AllowCurrentProperty = false;
+				options.DefaultEngineName = JintJsEngine.EngineName;
+			}).AddJint();
+			services.AddWebOptimizer(pipeline => pipeline.CompileScssFiles());
 
 			// PackgeHelper caches packages, so we need to register it as a singleton.
 			services.AddSingleton<PackageHelper>();
