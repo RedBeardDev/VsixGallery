@@ -42,6 +42,9 @@ namespace VsixGallery
 				IsCustomExtensionPath = true;
 			}
 
+			if (!Directory.Exists(_extensionRoot))
+				Directory.CreateDirectory(_extensionRoot);
+
 			FileProvider = new PhysicalFileProvider(_extensionRoot);
 			_cache = GetAllPackages();
 		}
