@@ -34,10 +34,6 @@ namespace VsixGallery
 #endif
 
 			services.AddMvc(options => options.EnableEndpointRouting = false);
-			services.AddHsts(options =>
-			{
-				options.MaxAge = TimeSpan.FromDays(126);
-			});
 
 			services.AddOutputCaching();
 			services.AddJsEngineSwitcher(options =>
@@ -92,12 +88,8 @@ namespace VsixGallery
 			}
 			else
 			{
-				app.UseExceptionHandler("/Error");
-				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-				app.UseHsts();
+				app.UseExceptionHandler("/Error");	
 			}
-
-			app.UseHttpsRedirection();
 
 			app.Use((context, next) =>
 				{
