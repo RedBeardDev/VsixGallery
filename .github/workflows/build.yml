@@ -26,6 +26,7 @@ jobs:
       run: dotnet test --no-build --verbosity normal
   push_to_registry:
     name: push docker image to hub
+    needs: build_app
     runs-on: ubuntu-latest
     steps:
       - name: check repository
