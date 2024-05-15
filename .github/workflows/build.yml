@@ -40,4 +40,4 @@ jobs:
         with:
           context: /
           push: true
-          tags: redbeardjdl/VsixGallery:latest
+          tags: redbeardjdl/vsixgallery:latest
