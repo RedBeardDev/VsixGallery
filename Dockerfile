@@ -7,7 +7,7 @@ ENV ASPNETCORE_URLS http://+:5000
 ENV APP_NAME VsixGallery
 
 WORKDIR /app
-COPY src/bin/Release/net8.0/ .
-COPY src/wwwroot/ ./wwwroot
+COPY ./src/bin/Release/net8.0/ .
+COPY ./src/wwwroot/ ./wwwroot
 
 CMD ["dotnet", "VsixGallery.dll"]
