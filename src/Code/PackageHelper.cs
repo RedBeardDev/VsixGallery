@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-
+using SixLabors.ImageSharp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -119,10 +118,11 @@ namespace VsixGallery
 				{
 					using (FileStream file = new FileStream(iconFile, FileMode.Open, FileAccess.Read))
 					{
-						using (Image img = Image.FromStream(stream: file, useEmbeddedColorManagement: false, validateImageData: false))
+						
+						using (Image img = Image.Load(file))
 						{
-							float width = img.PhysicalDimension.Width;
-							float height = img.PhysicalDimension.Height;
+							int width = img.Width;
+							int height = img.Height;
 
 							if (width < 90 || height < 90 || width > 128 || height > 128)
 							{
@@ -146,6 +146,16 @@ namespace VsixGallery
 			package.Errors = errors;
 		}
 
+		public void CachingPackage(Package package)
+		{
+			Package existing = _cache?.FirstOrDefault(p => p.ID == package.ID);
+
+			if (_cache.Contains(existing))
+				_cache.Remove(existing);
+
+			_cache.Add(package);
+		}
+
 		public Package GetPackage(string id)
 		{
 			if (_cache.Any(p => p.ID == id))
@@ -153,10 +163,7 @@ namespace VsixGallery
 				return _cache.SingleOrDefault(p => p.ID == id);
 			}
 
-			string folder = Path.Combine(_extensionRoot, id);
-			List<Package> packages = new List<Package>();
-
-			return DeserializePackage(folder);
+			return DeserializePackage(Path.Combine(_extensionRoot, id));
 		}
 
 		private static Package DeserializePackage(string version)
@@ -193,10 +200,16 @@ namespace VsixGallery
 				SavePackage(tempFolder, package, vsixFolder);
 				Validate(package);
 				Sanitize(package);
-
 				File.Copy(tempVsix, Path.Combine(vsixFolder, "extension.vsix"), true);
 
+				CachingPackage(package);
+
 				return package;
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine($"An error occured while trying to ProcessVsix file (e:{e.Message})");
+				throw;
 			}
 			finally
 			{
@@ -248,15 +261,6 @@ namespace VsixGallery
 			string json = JsonConvert.SerializeObject(package);
 
 			File.WriteAllText(Path.Combine(vsixFolder, "extension.json"), json, Encoding.UTF8);
-
-			Package existing = _cache.FirstOrDefault(p => p.ID == package.ID);
-
-			if (_cache.Contains(existing))
-			{
-				_cache.Remove(existing);
-			}
-
-			_cache.Add(package);
 		}
 	}
 }
