@@ -1,5 +1,5 @@
 # This Docker file is intended for the CI
-# A prerequisite is a published application in the .build/release
+# A prerequisite is a published application in src/bin/Release/net8.0/
 FROM mcr.microsoft.com/dotnet/sdk:8.0
 
 EXPOSE 5000
