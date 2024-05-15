@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
-using System;
-using System.IO;
 
 namespace VsixGallery
 {
@@ -18,7 +16,7 @@ namespace VsixGallery
 
 		public IDirectoryContents GetDirectoryContents(string subpath)
 		{
-			throw new NotSupportedException();
+			return _underlyingFileProvider.GetDirectoryContents(subpath);
 		}
 
 		public IFileInfo GetFileInfo(string subpath)

@@ -73,7 +73,7 @@ namespace VsixGallery.Controllers
 
 		private bool IsAuthorized()
 		{
-			if (string.IsNullOrEmpty(_secretKey))
+			if (string.IsNullOrWhiteSpace(_secretKey))
 			{
 				// No secret key means anyone can upload.
 				return true;

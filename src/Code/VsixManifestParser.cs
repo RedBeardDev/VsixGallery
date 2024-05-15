@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using VsixGallery.Code;
 
 namespace VsixGallery
 {
@@ -97,7 +98,7 @@ namespace VsixGallery
 			package.Description = ParseNode(doc, "Description", true);
 			package.Version = new Version(ParseNode(doc, "Identity", true, "Version")).ToString();
 			package.Author = ParseNode(doc, "Identity", true, "Publisher");
-			package.Icon = ParseNode(doc, "Icon", false);
+			package.Icon = ParseNode(doc, "Icon", false)?.FixPathSeparators();
 			package.Tags = ParseNode(doc, "Tags", false);
 			package.DatePublished = DateTime.UtcNow;
 			package.SupportedVersions = GetSupportedVersions(doc);
@@ -113,7 +114,7 @@ namespace VsixGallery
 			package.Description = ParseNode(doc, "Description", true);
 			package.Version = new Version(ParseNode(doc, "Version", true)).ToString();
 			package.Author = ParseNode(doc, "Author", true);
-			package.Icon = ParseNode(doc, "Icon", false);
+			package.Icon = ParseNode(doc, "Icon", false)?.FixPathSeparators();
 			package.DatePublished = DateTime.UtcNow;
 			package.SupportedVersions = GetSupportedVersions(doc);
 			package.ReleaseNotesUrl = ParseNode(doc, "ReleaseNotes", false);
@@ -178,6 +179,5 @@ namespace VsixGallery
 
 			return null;
 		}
-
 	}
 }
