@@ -36,10 +36,13 @@ jobs:
     steps:
       - name: check repository
         uses: actions/checkout@v4
+      - name: Create Folder structure
+        run: mkdir -p src/bin
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
           name: gallery-artifact
+          path: src/bin
       - name: Display structure of downloaded files
         run: find .
       - name: login to docker registry
