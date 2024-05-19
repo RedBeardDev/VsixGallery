@@ -24,6 +24,11 @@ jobs:
       run: dotnet build --no-restore --configuration Release
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - name: Upload Artifact
+    - uses: actions/upload-artifact@v4
+      with:
+        name: gallery-artifact
+        path: src/bin
   push_to_registry:
     name: push docker image to hub
     needs: build_app
@@ -31,6 +36,12 @@ jobs:
     steps:
       - name: check repository
         uses: actions/checkout@v4
+      - name: Download Artifact
+      - uses: actions/download-artifact@v4
+        with:
+          name: gallery-artifact
+      - name: Display structure of downloaded files
+        run: ls src/bin -R
       - name: login to docker registry
         uses: docker/login-action@v3
         with:
