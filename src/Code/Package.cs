@@ -29,20 +29,15 @@ namespace VsixGallery
 		[JsonIgnore]
 		public IEnumerable<string> Errors { get; set; }
 
-		public string AuthorLink =>
-			$"/author/{Uri.EscapeUriString(Author)}";
+		public string AuthorLink => $"/author/{Uri.EscapeDataString(Author)}";
 
-		public string DownloadLink =>
-			$"/extensions/{ID}/{Uri.EscapeUriString(Name + " ")}v{Version}.vsix";
+		public string DownloadLink => $"/extensions/{ID}/{Uri.EscapeDataString(Name + " ")}v{Version}.vsix";
 
-		public string DetailsLink =>
-			$"/extension/{ID}";
+		public string DetailsLink => $"/extension/{ID}";
 
-		public string FeedLink =>
-			$"/feed/extension/{ID}";
+		public string FeedLink => $"/feed/extension/{ID}";
 
-		public bool HasValidatorErrors =>
-			Errors != null && Errors.Any();
+		public bool HasValidatorErrors => Errors != null && Errors.Any();
 
 		public bool Unlisted =>
 			!string.IsNullOrEmpty(Tags) && Tags.Contains("unlisted", StringComparison.OrdinalIgnoreCase);
