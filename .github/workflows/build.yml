@@ -54,4 +54,4 @@ jobs:
         with:
           context: ./
           push: true
-          tags: redbearddev/vsixgallery:latest
+          tags: redbeardjdl/vsixgallery:latest
