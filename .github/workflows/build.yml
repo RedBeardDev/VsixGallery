@@ -10,10 +10,11 @@ on:
 
 jobs:
   build_app:
-    name: build app
+    name: Build App
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - name: Check repository
+      uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -30,29 +31,27 @@ jobs:
         name: gallery-artifact
         path: src/bin
   push_to_registry:
-    name: push docker image to hub
+    name: Build & Push Docker image to hub
     needs: build_app
     runs-on: ubuntu-latest
     steps:
-      - name: check repository
+      - name: Check repository
         uses: actions/checkout@v4
-      - name: Create Folder structure
+      - name: Create folder structure
         run: mkdir -p src/bin
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
           name: gallery-artifact
           path: src/bin
-      - name: Display structure of downloaded files
-        run: find .
-      - name: login to docker registry
+      - name: Login to Docker Registry
         uses: docker/login-action@v3
         with:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_TOKEN}}
-      - name: build and push docker image to registry
+      - name: Build & Push Docker image to registry
         uses: docker/build-push-action@v5
         with:
           context: ./
           push: true
-          tags: redbeardjdl/vsixgallery:latest
+          tags: redbearddev/vsixgallery:latest
