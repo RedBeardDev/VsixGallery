@@ -1,6 +1,6 @@
 # This Docker file is intended for the CI
 # A prerequisite is a published application in src/bin/Release/net8.0/
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.3-alpine3.18-amd64
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.11-alpine3.20-amd64
 
 EXPOSE 5000
 
