@@ -4,9 +4,10 @@ name: build
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches:
+      - master  # Trigger workflow on pushes to the master branch
+    tags:
+      - '*'     # Trigger workflow on tag pushes
 
 jobs:
   build_app:
@@ -49,9 +50,17 @@ jobs:
         with:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_TOKEN}}
+      - name: Determine Docker Tag
+        id: vars
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+            echo "tag=latest" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            echo "tag=${{ github.ref_name }}" >> $GITHUB_ENV
+          fi
       - name: Build & Push Docker image to registry
         uses: docker/build-push-action@v5
         with:
           context: ./
           push: true
-          tags: redbeardjdl/vsixgallery:latest
+          tags: redbeardjdl/vsixgallery:${{ env.tag }}
